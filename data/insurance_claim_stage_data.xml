@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- 1. FNOL Intake: 24 working hours to file the notice with the insurer -->
+    <record id="stage_fnol" model="insurance.claim.stage">
+        <field name="name">FNOL / Intake</field>
+        <field name="sequence">10</field>
+        <field name="sla_hours">24</field>
+        <field name="working_days">5</field>
+    </record>
+
+    <!-- 2. Document Collection: 120 working hours, no reserve yet -->
+    <record id="stage_documents" model="insurance.claim.stage">
+        <field name="name">Awaiting Documents</field>
+        <field name="sequence">20</field>
+        <field name="sla_hours">120</field>
+        <field name="working_days">5</field>
+    </record>
+
+    <!-- 3. Lodged with Insurer: hard gate, all required documents must be in -->
+    <record id="stage_lodged" model="insurance.claim.stage">
+        <field name="name">Lodged with Insurer</field>
+        <field name="sequence">30</field>
+        <field name="sla_hours">48</field>
+        <field name="working_days">5</field>
+        <field name="requires_documents" eval="True"/>
+    </record>
+
+    <!-- 4. Under Assessment: reserve starts accruing on the assessed figure -->
+    <record id="stage_assessment" model="insurance.claim.stage">
+        <field name="name">Under Assessment</field>
+        <field name="sequence">40</field>
+        <field name="sla_hours">168</field>
+        <field name="working_days">5</field>
+        <field name="counts_as_incurred" eval="True"/>
+    </record>
+
+    <!-- 5. Discharge Voucher Review: 336 working hours, 14 calendar days -->
+    <record id="stage_dv_review" model="insurance.claim.stage">
+        <field name="name">Discharge Voucher Review</field>
+        <field name="sequence">50</field>
+        <field name="sla_hours">336</field>
+        <field name="working_days">5</field>
+        <field name="counts_as_incurred" eval="True"/>
+    </record>
+
+    <!-- 6. Settled: terminal, settles at the amount actually paid -->
+    <record id="stage_settled" model="insurance.claim.stage">
+        <field name="name">Settled / Paid</field>
+        <field name="sequence">60</field>
+        <field name="sla_hours">0</field>
+        <field name="counts_as_incurred" eval="True"/>
+        <field name="is_closed" eval="True"/>
+    </record>
+
+    <!-- 7. Repudiated: terminal but STILL reserves, the reserve releases on appeal -->
+    <record id="stage_repudiated" model="insurance.claim.stage">
+        <field name="name">Repudiated / Rejected</field>
+        <field name="sequence">70</field>
+        <field name="sla_hours">0</field>
+        <field name="counts_as_incurred" eval="True"/>
+        <field name="is_closed" eval="True"/>
+        <field name="fold" eval="True"/>
+    </record>
+
+</odoo>

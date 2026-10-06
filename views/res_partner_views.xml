@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_insurance_claims" model="ir.ui.view">
+        <field name="name">res.partner.form.insurance.claims</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Claims Experience" name="insurance_claims">
+                    <div class="alert alert-info" role="alert">
+                        Loss ratio divides total incurred claims by earned premium across this client's policies. Use it at renewal to argue for a premium discount or against an excess increase.
+                    </div>
+                    <group>
+                        <group>
+                            <field name="insurance_claim_count" string="Claims"/>
+                            <field name="insurance_claims_currency_id"/>
+                            <field name="insurance_earned_premium_total" widget="monetary"/>
+                        </group>
+                        <group>
+                            <field name="insurance_claims_incurred_total" widget="monetary"/>
+                            <field name="insurance_loss_ratio" widget="percentage_points"/>
+                            <field name="insurance_loss_ratio_band" widget="badge" decoration-success="insurance_loss_ratio_band == 'low'" decoration-warning="insurance_loss_ratio_band == 'moderate'" decoration-danger="insurance_loss_ratio_band == 'adverse'"/>
+                        </group>
+                    </group>
+                    <div class="mt16">
+                        <button name="action_view_insurance_policies" type="object" string="Insurance Policies" class="btn btn-secondary"/>
+                        <button name="action_view_insurance_claims" type="object" string="Claims" class="btn btn-secondary"/>
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

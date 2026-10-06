@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- ==================== MOTOR ==================== -->
+    <record id="tpl_motor_police_abstract" model="insurance.claim.document.template">
+        <field name="name">Police Abstract</field>
+        <field name="insurance_class">motor</field>
+        <field name="description">Official police abstract of the accident, obtained from the police station where the incident was reported.</field>
+        <field name="is_required" eval="True"/>
+        <field name="sequence">10</field>
+    </record>
+    <record id="tpl_motor_driving_licence" model="insurance.claim.document.template">
+        <field name="name">Driver's Licence Copy</field>
+        <field name="insurance_class">motor</field>
+        <field name="description">Copy of the driving licence held by the person driving at the time of loss.</field>
+        <field name="is_required" eval="True"/>
+        <field name="sequence">20</field>
+    </record>
+    <record id="tpl_motor_logbook" model="insurance.claim.document.template">
+        <field name="name">Vehicle Logbook</field>
+        <field name="insurance_class">motor</field>
+        <field name="description">Registration book for the insured vehicle.</field>
+        <field name="is_required" eval="True"/>
+        <field name="sequence">30</field>
+    </record>
+    <record id="tpl_motor_scene_photos" model="insurance.claim.document.template">
+        <field name="name">Scene Photographs</field>
+        <field name="insurance_class">motor</field>
+        <field name="description">Photographs of the accident scene and vehicle damage, wide and detail shots.</field>
+        <field name="is_required" eval="True"/>
+        <field name="sequence">40</field>
+    </record>
+    <record id="tpl_motor_repair_estimate" model="insurance.claim.document.template">
+        <field name="name">Repair Estimate / Pro-forma</field>
+        <field name="insurance_class">motor</field>
+        <field name="description">Itemised repair or replacement cost estimate from a licensed garage.</field>
+        <field name="is_required" eval="False"/>
+        <field name="sequence">50</field>
+    </record>
+
+    <!-- ==================== FIRE ==================== -->
+    <record id="tpl_fire_incident_report" model="insurance.claim.document.template">
+        <field name="name">Incident / Loss Report</field>
+        <field name="insurance_class">fire</field>
+        <field name="description">Written description of the fire or peril with cause, time and extent of damage.</field>
+        <field name="is_required" eval="True"/>
+        <field name="sequence">10</field>
+    </record>
+    <record id="tpl_fire_fire_brigade" model="insurance.claim.document.template">
+        <field name="name">Fire Brigade Report</field>
+        <field name="insurance_class">fire</field>
+        <field name="description">Fire service incident report, where the brigade attended.</field>
+        <field name="is_required" eval="True"/>
+        <field name="sequence">20</field>
+    </record>
+    <record id="tpl_fire_photos" model="insurance.claim.document.template">
+        <field name="name">Damage Photographs</field>
+        <field name="insurance_class">fire</field>
+        <field name="description">Photographic record of all damaged areas and contents.</field>
+        <field name="is_required" eval="True"/>
+        <field name="sequence">30</field>
+    </record>
+    <record id="tpl_fire_inventory" model="insurance.claim.document.template">
+        <field name="name">Damaged Stock / Inventory List</field>
+        <field name="insurance_class">fire</field>
+        <field name="description">Itemised list of damaged goods with quantities and values.</field>
+        <field name="is_required" eval="False"/>
+        <field name="sequence">40</field>
+    </record>
+
+    <!-- ==================== MARINE ==================== -->
+    <record id="tpl_marine_bill_of_lading" model="insurance.claim.document.template">
+        <field name="name">Bill of Lading</field>
+        <field name="insurance_class">marine</field>
+        <field name="description">Clean or dirty bill of lading for the affected shipment.</field>
+        <field name="is_required" eval="True"/>
+        <field name="sequence">10</field>
+    </record>
+    <record id="tpl_marine_survey_report" model="insurance.claim.document.template">
+        <field name="name">Survey Report</field>
+        <field name="insurance_class">marine</field>
+        <field name="description">Report from the appointed surveyor or average adjuster.</field>
+        <field name="is_required" eval="True"/>
+        <field name="sequence">20</field>
+    </record>
+    <record id="tpl_marine_invoice" model="insurance.claim.document.template">
+        <field name="name">Commercial Invoice</field>
+        <field name="insurance_class">marine</field>
+        <field name="description">Commercial invoice evidencing the value of the goods lost.</field>
+        <field name="is_required" eval="True"/>
+        <field name="sequence">30</field>
+    </record>
+    <record id="tpl_marine_packing_list" model="insurance.claim.document.template">
+        <field name="name">Packing List</field>
+        <field name="insurance_class">marine</field>
+        <field name="description">Packing list for the consignment.</field>
+        <field name="is_required" eval="False"/>
+        <field name="sequence">40</field>
+    </record>
+
+    <!-- ==================== HEALTH ==================== -->
+    <record id="tpl_health_incident_report" model="insurance.claim.document.template">
+        <field name="name">Incident Report</field>
+        <field name="insurance_class">health</field>
+        <field name="description">Description of the illness or injury giving rise to the claim.</field>
+        <field name="is_required" eval="True"/>
+        <field name="sequence">10</field>
+    </record>
+    <record id="tpl_health_doctor_letter" model="insurance.claim.document.template">
+        <field name="name">Medical Practitioner's Letter</field>
+        <field name="insurance_class">health</field>
+        <field name="description">Clinician's letter confirming diagnosis, treatment and prognosis.</field>
+        <field name="is_required" eval="True"/>
+        <field name="sequence">20</field>
+    </record>
+    <record id="tpl_health_receipts" model="insurance.claim.document.template">
+        <field name="name">Medical Receipts</field>
+        <field name="insurance_class">health</field>
+        <field name="description">Itemised receipts and invoices for all medical expenses claimed.</field>
+        <field name="is_required" eval="True"/>
+        <field name="sequence">30</field>
+    </record>
+    <record id="tpl_health_id" model="insurance.claim.document.template">
+        <field name="name">National ID</field>
+        <field name="insurance_class">health</field>
+        <field name="description">National identification of the patient.</field>
+        <field name="is_required" eval="True"/>
+        <field name="sequence">40</field>
+    </record>
+
+    <!-- ==================== GENERAL FALLBACK ==================== -->
+    <record id="tpl_general_incident_report" model="insurance.claim.document.template">
+        <field name="name">Incident / Loss Report</field>
+        <field name="insurance_class">general</field>
+        <field name="description">Written account of the loss: what happened, when, where and what was damaged.</field>
+        <field name="is_required" eval="True"/>
+        <field name="sequence">10</field>
+    </record>
+    <record id="tpl_general_photos" model="insurance.claim.document.template">
+        <field name="name">Photographic Evidence</field>
+        <field name="insurance_class">general</field>
+        <field name="description">Photographs of the damaged property or item.</field>
+        <field name="is_required" eval="True"/>
+        <field name="sequence">20</field>
+    </record>
+    <record id="tpl_general_invoice" model="insurance.claim.document.template">
+        <field name="name">Proof of Value</field>
+        <field name="insurance_class">general</field>
+        <field name="description">Invoice, receipt or other evidence of the item's value before the loss.</field>
+        <field name="is_required" eval="True"/>
+        <field name="sequence">30</field>
+    </record>
+
+</odoo>

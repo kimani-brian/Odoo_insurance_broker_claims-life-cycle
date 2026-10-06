@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_claim_stage_list" model="ir.ui.view">
+        <field name="name">insurance.claim.stage.list</field>
+        <field name="model">insurance.claim.stage</field>
+        <field name="arch" type="xml">
+            <list string="Claim Stages" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="sla_hours"/>
+                <field name="working_days"/>
+                <field name="requires_documents"/>
+                <field name="counts_as_incurred"/>
+                <field name="is_closed"/>
+                <field name="fold"/>
+                <field name="active" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_claim_stage_form" model="ir.ui.view">
+        <field name="name">insurance.claim.stage.form</field>
+        <field name="model">insurance.claim.stage</field>
+        <field name="arch" type="xml">
+            <form string="Claim Stage">
+                <sheet>
+                    <widget name="web_ribbon" title="Closed" bg_color="text-bg-danger" invisible="not is_closed"/>
+                    <group>
+                        <group string="Stage">
+                            <field name="name"/>
+                            <field name="sequence"/>
+                            <field name="fold"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Service Level">
+                            <field name="sla_hours"/>
+                            <field name="working_days"/>
+                            <field name="requires_documents"/>
+                            <field name="counts_as_incurred"/>
+                            <field name="is_closed"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info" role="alert" invisible="not requires_documents">
+                        Claims may only enter this stage once every required document on their checklist has been received.
+                    </div>
+                    <div class="alert alert-warning" role="alert" invisible="counts_as_incurred">
+                        This stage does not feed the loss ratio. Enable 'Counts as Incurred' if claims should reserve while here.
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_claim_stage" model="ir.actions.act_window">
+        <field name="name">Claim Stages</field>
+        <field name="res_model">insurance.claim.stage</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Configure the claims pipeline</p>
+            <p>Each stage carries an SLA target in working hours. Set 'Requires Complete Checklist' on the stage that represents lodging the claim with the insurer.</p>
+        </field>
+    </record>
+</odoo>

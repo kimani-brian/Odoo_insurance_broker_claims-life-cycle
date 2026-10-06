@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_claim_kanban" model="ir.ui.view">
+        <field name="name">insurance.claim.kanban</field>
+        <field name="model">insurance.claim</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="stage_id" quick_create="false" sample_ids="0">
+                <field name="stage_id"/>
+                <field name="is_sla_breached"/>
+                <field name="currency_id"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_global_click" t-att-class="'text-danger' if is_sla_breached else ''">
+                            <div class="oe_kanban_details">
+                                <strong><field name="name"/></strong>
+                                <div><field name="client_id"/></div>
+                                <div><field name="insurance_class"/></div>
+                                <div><field name="estimated_amount" widget="monetary"/></div>
+                                <div t-if="is_sla_breached" class="text-danger">
+                                    <i class="fa fa-exclamation-triangle"/> SLA breached
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_claim_list" model="ir.ui.view">
+        <field name="name">insurance.claim.list</field>
+        <field name="model">insurance.claim</field>
+        <field name="arch" type="xml">
+                <list string="Claims" decoration-danger="is_sla_breached == True" decoration-muted="stage_id.is_closed == True">
+                    <field name="name"/>
+                    <field name="stage_id" widget="badge"/>
+                    <field name="policy_id" optional="show"/>
+                <field name="client_id"/>
+                <field name="underwriter_id" optional="hide"/>
+                <field name="insurance_class" optional="show"/>
+                <field name="insurer_claim_ref" optional="hide"/>
+                <field name="date_of_loss"/>
+                <field name="date_fnol" optional="hide"/>
+                <field name="estimated_amount" widget="monetary" sum="Estimated" optional="show"/>
+                <field name="assessed_amount" widget="monetary" sum="Assessed" optional="hide"/>
+                <field name="excess_amount" widget="monetary" optional="hide"/>
+                <field name="settled_amount" widget="monetary" sum="Settled" optional="show"/>
+                <field name="incurred_amount" widget="monetary" sum="Incurred" optional="show"/>
+                <field name="is_sla_breached" widget="boolean_toggle" optional="show"/>
+                <field name="sla_hours_remaining" widget="float_time" optional="hide"/>
+                <field name="is_documents_complete" widget="boolean_toggle" optional="hide"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <field name="active" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_claim_form" model="ir.ui.view">
+        <field name="name">insurance.claim.form</field>
+        <field name="model">insurance.claim</field>
+        <field name="arch" type="xml">
+            <form string="Insurance Claim">
+                <header>
+                    <button name="action_mark_all_documents_received" type="object" string="Mark All Documents Received" class="oe_highlight" invisible="is_documents_complete"/>
+                    <button name="action_reopen" type="object" string="Reopen" groups="insurance_broker_claims.group_claims_manager" invisible="not stage_id.is_closed"/>
+                    <field name="stage_id" widget="statusbar" statusbar_visible="stage_fnol,stage_documents,stage_lodged,stage_assessment,stage_dv_review,stage_settled"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="SLA Breached" bg_color="text-bg-danger" invisible="not is_sla_breached"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_policy" type="object" class="oe_stat_button" icon="fa-file-text-o" invisible="not policy_id" groups="insurance_broker_claims.group_claims_user">
+                            <div class="o_stat_info text-end">
+                                <span class="o_stat_text">Policy</span>
+                                <span class="o_stat_value"><field name="policy_id" readonly="1" widget="many2one"/></span>
+                            </div>
+                        </button>
+                        <button name="action_new_claim_from_policy" type="object" class="oe_stat_button" icon="fa-plus" invisible="not policy_id" groups="insurance_broker_claims.group_claims_user">
+                            <div class="o_stat_info text-end">
+                                <span class="o_stat_text">Policy</span>
+                                <span class="o_stat_value">New Claim</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" readonly="1" placeholder="New - generated on save"/></h1>
+                    </div>
+                    <div class="alert alert-warning" role="alert" invisible="is_documents_complete">
+                        <strong>Checklist incomplete.</strong> The claim cannot be lodged with the insurer until every required document is received. Outstanding: <field name="missing_document_names" readonly="1" nolabel="1" class="text-danger"/>
+                    </div>
+                    <group>
+                        <group string="Claim Info" name="claim_info">
+                            <field name="policy_id" options="{'no_create': True}" domain="[('state','in',('bound','invoiced'))]"/>
+                            <field name="client_id" options="{'no_create': True}" readonly="policy_id"/>
+                            <field name="underwriter_id" options="{'no_create': True}" readonly="policy_id"/>
+                            <field name="insurance_class" readonly="policy_id"/>
+                            <field name="insurer_claim_ref"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Incident" name="incident">
+                            <field name="date_of_loss"/>
+                            <field name="date_fnol"/>
+                            <field name="incident_location"/>
+                        </group>
+                    </group>
+                    <group string="Loss Description">
+                        <field name="loss_description" nolabel="1" placeholder="What happened, where, and what was damaged."/>
+                    </group>
+                    <notebook>
+                        <page string="Document Checklist" name="documents">
+                            <div class="alert alert-info" role="alert">
+                                Required documents gate progression to the 'Lodged with Insurer' stage. Received: <field name="received_document_count" readonly="1" class="text-success"/> of <field name="required_document_count" readonly="1"/>.
+                            </div>
+                            <field name="document_ids">
+                                <list string="Documents" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="description" optional="show"/>
+                                    <field name="is_required"/>
+                                    <field name="is_received"/>
+                                    <field name="received_date"/>
+                                    <field name="attachment_id" widget="many2one_binary_attachment"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Financials" name="financials">
+                            <group>
+                                <group string="Reserve &amp; Assessment">
+                                    <field name="estimated_amount" widget="monetary"/>
+                                    <field name="assessed_amount" widget="monetary"/>
+                                    <field name="excess_amount" widget="monetary"/>
+                                    <field name="net_offer_amount" widget="monetary"/>
+                                </group>
+                                <group string="Settlement">
+                                    <field name="settled_amount" widget="monetary"/>
+                                    <field name="incurred_amount" widget="monetary"/>
+                                </group>
+                            </group>
+                            <div class="alert alert-secondary" role="alert">
+                                Incurred feeds the loss ratio. It reserves nothing before assessment, switches to the assessed amount net of excess, and settles at the amount paid. Repudiated claims keep reserving.
+                            </div>
+                        </page>
+                        <page string="Service Providers" name="providers">
+                            <field name="service_provider_ids">
+                                <list string="Providers" editable="bottom">
+                                    <field name="partner_id"/>
+                                    <field name="provider_type"/>
+                                    <field name="appointment_date"/>
+                                    <field name="report_received_date"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Internal Notes" name="notes">
+                            <field name="notes" nolabel="1" placeholder="Chasing notes, negotiation history, escalation history."/>
+                        </page>
+                        <page string="Activity" name="activity">
+                            <chatter/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_claim_search" model="ir.ui.view">
+        <field name="name">insurance.claim.search</field>
+        <field name="model">insurance.claim</field>
+        <field name="arch" type="xml">
+            <search string="Claims">
+                <field name="name"/>
+                <field name="insurer_claim_ref"/>
+                <field name="client_id"/>
+                <field name="policy_id"/>
+                <filter name="filter_my_claims" string="My Claims" domain="[('user_id','=',uid)]"/>
+                <filter name="filter_archived" string="Archived" domain="[('active','=',False)]"/>
+                <separator/>
+                <filter name="filter_sla_breached" string="SLA Breached" domain="[('is_sla_breached','=',True)]"/>
+                <filter name="filter_docs_incomplete" string="Checklist Incomplete" domain="[('is_documents_complete','=',False)]"/>
+                <separator/>
+                <filter name="filter_open" string="Open" domain="[('stage_id.is_closed','=',False)]"/>
+                <filter name="filter_closed" string="Closed" domain="[('stage_id.is_closed','=',True)]"/>
+                <separator/>
+                <filter name="filter_unsettled" string="Unsettled" domain="[('settled_amount','=',0)]"/>
+                <group>
+                    <filter name="group_stage" string="Stage" context="{'group_by':'stage_id'}"/>
+                    <filter name="group_client" string="Client" context="{'group_by':'client_id'}"/>
+                    <filter name="group_underwriter" string="Underwriter" context="{'group_by':'underwriter_id'}"/>
+                    <filter name="group_class" string="Business Class" context="{'group_by':'insurance_class'}"/>
+                    <filter name="group_date_of_loss" string="Date of Loss" context="{'group_by':'date_of_loss'}"/>
+                    <filter name="group_company" string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_insurance_claim" model="ir.actions.act_window">
+        <field name="name">Claims</field>
+        <field name="res_model">insurance.claim</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="context">{'search_default_filter_open': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Log your first claim</p>
+            <p>Record the first notification of loss, chase the insurer through the pipeline, and let the SLA clock flag anything that stalls.</p>
+        </field>
+    </record>
+</odoo>

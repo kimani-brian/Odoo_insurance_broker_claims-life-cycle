@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="module_category_insurance_claims" model="ir.module.category">
+        <field name="name">Insurance Claims</field>
+        <field name="description">Claims case management and SLA tracking.</field>
+        <field name="sequence">16</field>
+    </record>
+
+    <record id="privilege_insurance_claims" model="res.groups.privilege">
+        <field name="name">Insurance Claims</field>
+        <field name="category_id" ref="insurance_broker_claims.module_category_insurance_claims"/>
+        <field name="sequence">16</field>
+    </record>
+
+    <record id="group_claims_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="privilege_id" ref="insurance_broker_claims.privilege_insurance_claims"/>
+        <field name="comment">Can create and progress claims and record documents. Cannot delete claims or configure stages, templates or policies.</field>
+    </record>
+
+    <record id="group_claims_manager" model="res.groups">
+        <field name="name">Administrator</field>
+        <field name="privilege_id" ref="insurance_broker_claims.privilege_insurance_claims"/>
+        <field name="implied_ids" eval="[(4, ref('insurance_broker_claims.group_claims_user'))]"/>
+        <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        <field name="comment">Full access including claim deletion, stage configuration and document templates.</field>
+    </record>
+
+    <record id="rule_claim_multi_company" model="ir.rule">
+        <field name="name">Insurance Claim: multi-company</field>
+        <field name="model_id" ref="model_insurance_claim"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        <field name="groups" eval="[(4, ref('insurance_broker_claims.group_claims_user'))]"/>
+    </record>
+</odoo>

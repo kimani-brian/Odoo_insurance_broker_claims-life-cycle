@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_claim_user,insurance.claim.user,model_insurance_claim,insurance_broker_claims.group_claims_user,1,1,1,0
+access_claim_manager,insurance.claim.manager,model_insurance_claim,insurance_broker_claims.group_claims_manager,1,1,1,1
+access_claim_read_finance_policy,insurance.policy.read.for.claims,model_insurance_policy,insurance_broker_claims.group_claims_user,1,0,0,0
+access_claim_stage_user,insurance.claim.stage.user,model_insurance_claim_stage,insurance_broker_claims.group_claims_user,1,0,0,0
+access_claim_stage_manager,insurance.claim.stage.manager,model_insurance_claim_stage,insurance_broker_claims.group_claims_manager,1,1,1,1
+access_claim_document_user,insurance.claim.document.user,model_insurance_claim_document,insurance_broker_claims.group_claims_user,1,1,1,1
+access_claim_document_manager,insurance.claim.document.manager,model_insurance_claim_document,insurance_broker_claims.group_claims_manager,1,1,1,1
+access_claim_doc_template_user,insurance.claim.document.template.user,model_insurance_claim_document_template,insurance_broker_claims.group_claims_user,1,0,0,0
+access_claim_doc_template_manager,insurance.claim.document.template.manager,model_insurance_claim_document_template,insurance_broker_claims.group_claims_manager,1,1,1,1
+access_claim_provider_user,insurance.claim.service.provider.user,model_insurance_claim_service_provider,insurance_broker_claims.group_claims_user,1,1,1,1
+access_claim_provider_manager,insurance.claim.service.provider.manager,model_insurance_claim_service_provider,insurance_broker_claims.group_claims_manager,1,1,1,1

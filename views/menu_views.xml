@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Root menu -->
+    <menuitem id="menu_claims_root" name="Insurance Claims" sequence="55" groups="insurance_broker_claims.group_claims_user"/>
+
+    <!-- Claims -->
+    <menuitem id="menu_claims_claims" name="Claims" parent="insurance_broker_claims.menu_claims_root" sequence="10" action="insurance_broker_claims.action_insurance_claim" groups="insurance_broker_claims.group_claims_user"/>
+    <menuitem id="menu_claims_providers" name="Service Providers" parent="insurance_broker_claims.menu_claims_root" sequence="30" action="insurance_broker_claims.action_claim_provider" groups="insurance_broker_claims.group_claims_user"/>
+
+    <!--
+        No "Insurance Policies" menu here on purpose: policies live in the
+        insurance_broker_finance module, which already publishes its own menu.
+        Duplicating it would give users two places to edit the same record.
+    -->
+
+    <!-- Configuration -->
+    <menuitem id="menu_claims_configuration" name="Configuration" parent="insurance_broker_claims.menu_claims_root" sequence="100" groups="insurance_broker_claims.group_claims_manager"/>
+    <menuitem id="menu_claims_stages" name="Stages &amp; SLA" parent="insurance_broker_claims.menu_claims_configuration" sequence="10" action="insurance_broker_claims.action_claim_stage" groups="insurance_broker_claims.group_claims_manager"/>
+    <menuitem id="menu_claim_templates" name="Document Checklists" parent="insurance_broker_claims.menu_claims_configuration" sequence="20" action="insurance_broker_claims.action_claim_doc_template" groups="insurance_broker_claims.group_claims_manager"/>
+</odoo>
